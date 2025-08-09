@@ -134,6 +134,16 @@ jobs:
   docs:
     name: Documentation
     runs-on: ubuntu-latest
+    needs: [fmt, clippy, test]
+    if: github.ref == 'refs/heads/main'
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    # 添加明确的权限声明以解决 403 错误
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
