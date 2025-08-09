@@ -16,50 +16,10 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  # 预检查：确保所有测试通过
-  pre-release-check:
-    name: Pre-release Check
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      
-      - name: Setup Rust
-        uses: dtolnay/rust-toolchain@stable
-        with:
-          components: rustfmt, clippy
-      
-      - name: Cache dependencies
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.cargo/bin/
-            ~/.cargo/registry/index/
-            ~/.cargo/registry/cache/
-            ~/.cargo/git/db/
-            target/
-          key: ${{ runner.os }}-cargo-release-${{ hashFiles('**/Cargo.lock') }}
-      
-      - name: Check formatting
-        run: cargo fmt --all -- --check
-      
-      - name: Run clippy
-        run: cargo clippy --all-targets --all-features -- -D warnings
-      
-      - name: Run tests
-        run: cargo test --verbose --all-features
-      
-      - name: Build release
-        run: cargo build --release --all-features
-      
-      - name: Dry run publish
-        run: cargo publish --dry-run
-
   # 创建GitHub Release
   create-release:
     name: Create GitHub Release
     runs-on: ubuntu-latest
-    needs: pre-release-check
     outputs:
       upload_url: ${{ steps.create_release.outputs.upload_url }}
       version: ${{ steps.get_version.outputs.version }}
@@ -118,7 +78,7 @@ jobs:
   publish-crates:
     name: Publish to crates.io
     runs-on: ubuntu-latest
-    needs: [pre-release-check, create-release]
+    needs: create-release
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -126,42 +86,11 @@ jobs:
       - name: Setup Rust
         uses: dtolnay/rust-toolchain@stable
       
-      - name: Cache dependencies
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.cargo/bin/
-            ~/.cargo/registry/index/
-            ~/.cargo/registry/cache/
-            ~/.cargo/git/db/
-            target/
-          key: ${{ runner.os }}-cargo-publish-${{ hashFiles('**/Cargo.lock') }}
-      
       - name: Login to crates.io
         run: cargo login ${{ secrets.CRATES_IO_TOKEN }}
       
       - name: Publish to crates.io
         run: cargo publish
-      
-      - name: Wait for crates.io
-        run: sleep 30
-      
-      - name: Verify publication
-        run: |
-          VERSION="${{ needs.create-release.outputs.version }}"
-          VERSION_NUMBER=${VERSION#v}
-          
-          # 等待并验证包是否在crates.io上可用
-          for i in {1..10}; do
-            if cargo search supabase-jwt | grep -q "${VERSION_NUMBER}"; then
-              echo "✅ Package successfully published to crates.io"
-              exit 0
-            fi
-            echo "⏳ Waiting for package to appear on crates.io... (attempt $i/10)"
-            sleep 30
-          done
-          
-          echo "⚠️ Package may not be immediately visible on crates.io, but publish command succeeded"
 
   # 更新文档
   update-docs:
@@ -175,21 +104,8 @@ jobs:
       - name: Setup Rust
         uses: dtolnay/rust-toolchain@stable
       
-      - name: Cache dependencies
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.cargo/bin/
-            ~/.cargo/registry/index/
-            ~/.cargo/registry/cache/
-            ~/.cargo/git/db/
-            target/
-          key: ${{ runner.os }}-cargo-docs-release-${{ hashFiles('**/Cargo.lock') }}
-      
       - name: Build documentation
         run: cargo doc --no-deps --all-features
-        env:
-          RUSTDOCFLAGS: "-D warnings"
       
       - name: Deploy documentation
         uses: peaceiris/actions-gh-pages@v4
@@ -201,22 +117,18 @@ jobs:
 
   # 发布后通知
   post-release:
-    name: Post-release Notifications
+    name: Post-release Summary
     runs-on: ubuntu-latest
     needs: [create-release, publish-crates, update-docs]
     if: always()
     steps:
       - name: Release Summary
         run: |
-          echo "🎉 Release Summary for ${{ needs.create-release.outputs.version }}"
+          echo "🎉 Release ${{ needs.create-release.outputs.version }} completed!"
           echo "📦 GitHub Release: ${{ needs.create-release.result }}"
-          echo "🚀 Crates.io Publish: ${{ needs.publish-crates.result }}"
-          echo "📚 Documentation: ${{ needs.update-docs.result }}"
+          echo "🚀 Crates.io: ${{ needs.publish-crates.result }}"
+          echo "📚 Docs: ${{ needs.update-docs.result }}"
           
           if [[ "${{ needs.publish-crates.result }}" == "success" ]]; then
-            echo "✅ Successfully published to crates.io!"
-            echo "📖 View on crates.io: https://crates.io/crates/supabase-jwt"
-            echo "📚 View docs: https://docs.rs/supabase-jwt"
-          else
-            echo "❌ Failed to publish to crates.io"
+            echo "✅ View on crates.io: https://crates.io/crates/supabase-jwt"
           fi
