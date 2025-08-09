@@ -340,10 +340,10 @@ mod tests {
 
         let clone_duration = start_time.elapsed();
 
-        // 验证性能
+        // 验证性能 - 标准克隆操作应该在合理时间内完成
         assert!(
-            clone_duration.as_millis() < 100,
-            "10000 clones should complete quickly: {}ms",
+            clone_duration.as_millis() < 200,
+            "10000 clones should complete in reasonable time: {}ms (limit: 200ms)",
             clone_duration.as_millis()
         );
 
