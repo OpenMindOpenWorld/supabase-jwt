@@ -66,6 +66,8 @@
 3. 启用以下选项：
    - Require a pull request before merging
    - Require status checks to pass before merging
+   - Require branches to be up to date before merging
+   - Restrict pushes that create files
    - 选择必需的状态检查：
      - `Format Check`
      - `Clippy Check`
