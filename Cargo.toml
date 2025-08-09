@@ -1,0 +1,42 @@
+[package]
+name = "supabase-jwt"
+version = "0.1.0"
+authors = ["kanata996 <kkanata996@gmail.com>"]
+edition = "2021"
+description = "A lightweight, framework-agnostic library for validating Supabase Auth JWTs using a cached JWKS."
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/OpenMindOpenWorld/supabase-jwt"
+homepage = "https://github.com/OpenMindOpenWorld/supabase-jwt"
+documentation = "https://docs.rs/supabase-jwt"
+readme = "README.md"
+keywords = [
+    "supabase",
+    "jwt",
+    "auth",
+    "authentication",
+    "jwks",
+    "tokio",
+    "axum",
+    "actix",
+    "rocket",
+]
+categories = ["authentication", "web-programming"]
+
+[dependencies]
+base64 = "0.22.1"
+reqwest = { version = "0.12.9", features = ["json"] }
+jsonwebtoken = "9.3.1"
+serde = { version = "1.0.219", features = ["derive"] }
+serde_json = "1.0.141"
+thiserror = "2.0.12"
+tokio = { version = "1.47.0", features = ["time"] }
+tracing = "0.1.41"
+
+[dev-dependencies]
+tokio = { version = "1.47.0", features = ["full"] }
+tokio-test = "0.4.4"
+mockito = "1.6.1"
+wiremock = "0.6.2"
+p256 = { version = "0.13.2", features = ["pkcs8"] }
+ecdsa = { version = "0.16.9", features = ["signing"] }
+rand = "0.8.5"
