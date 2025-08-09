@@ -237,9 +237,7 @@ mod tests {
                 // 这是预期的结果，证明签名验证逻辑按预期工作
             }
             Err(e) => {
-                panic!(
-                    "Expected a verification error due to invalid signature, but got: {e:?}"
-                );
+                panic!("Expected a verification error due to invalid signature, but got: {e:?}");
             }
             Ok(_) => {
                 panic!("Validation should have failed for an invalid signature, but it passed");
@@ -478,9 +476,7 @@ mod tests {
             "End-to-end operation too slow: {avg_operation_time:?} per operation"
         );
 
-        println!(
-            "End-to-end performance: {avg_operation_time:?}/op for {iterations} iterations"
-        );
+        println!("End-to-end performance: {avg_operation_time:?}/op for {iterations} iterations");
     }
 
     /// 测试 Claims 与 Parser、JWKS 模块的完整集成
