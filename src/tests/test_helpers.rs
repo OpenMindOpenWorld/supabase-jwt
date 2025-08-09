@@ -181,7 +181,7 @@ pub fn create_mock_jwt_token() -> String {
     // 注意：真实环境中需要使用有效的 ES256 签名
     let signature = "MOCK_SIGNATURE_FOR_TESTING_ONLY_NOT_VALID";
 
-    format!("{}.{}.{}", header, payload, signature)
+    format!("{header}.{payload}.{signature}")
 }
 
 // ==================== Mock Server 辅助函数 ====================

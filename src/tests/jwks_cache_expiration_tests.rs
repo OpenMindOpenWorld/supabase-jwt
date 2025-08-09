@@ -343,12 +343,12 @@ mod tests {
             tasks.push(tokio::spawn(async move {
                 // 模拟并发读取
                 let jwks = cache_clone.get_cached_jwks().await;
-                assert!(jwks.is_some(), "Task {} should read valid cache", i);
+                assert!(jwks.is_some(), "Task {i} should read valid cache");
                 assert_eq!(jwks.unwrap().keys[0].kid, TEST_KID);
 
                 // 模拟并发的过期缓存读取
                 let stale_jwks = cache_clone.get_stale_cache().await;
-                assert!(stale_jwks.is_some(), "Task {} should read stale cache", i);
+                assert!(stale_jwks.is_some(), "Task {i} should read stale cache");
                 assert_eq!(stale_jwks.unwrap().keys[0].kid, TEST_KID);
             }));
         }

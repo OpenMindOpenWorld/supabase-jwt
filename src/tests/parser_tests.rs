@@ -116,7 +116,7 @@ mod tests {
         let long_header = "a".repeat(2700); // 约 2700 字符的 header 部分
         let long_payload = "b".repeat(2700); // 约 2700 字符的 payload 部分
         let long_signature = "c".repeat(2700); // 约 2700 字符的 signature 部分
-        let boundary_token = format!("{}.{}.{}", long_header, long_payload, long_signature); // 总长度约 8100+ 字符
+        let boundary_token = format!("{long_header}.{long_payload}.{long_signature}"); // 总长度约 8100+ 字符
         assert!(
             parser::JwtParser::decode_header(&boundary_token).is_err(),
             "Token exceeding length limit should be rejected"
@@ -127,7 +127,7 @@ mod tests {
             .encode(r#"{"alg":"ES256","kid":"test"}"#);
         let valid_payload = "eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9";
         let valid_signature = "signature";
-        let valid_token = format!("{}.{}.{}", valid_header, valid_payload, valid_signature);
+        let valid_token = format!("{valid_header}.{valid_payload}.{valid_signature}");
         // 这个 token 应该能成功解析 header（即使签名无效）
         assert!(
             parser::JwtParser::decode_header(&valid_token).is_ok(),
@@ -279,8 +279,7 @@ mod tests {
             let result = parser::JwtParser::parse_algorithm(alg);
             assert!(
                 result.is_err(),
-                "Should reject unsupported algorithm: {}",
-                alg
+                "Should reject unsupported algorithm: {alg}"
             );
         }
     }
@@ -322,7 +321,7 @@ mod tests {
         // 创建一个有效的 base64 但无效的 JSON
         let invalid_json_b64 =
             base64::engine::general_purpose::URL_SAFE_NO_PAD.encode(b"{invalid json}");
-        let invalid_token = format!("{}.payload.signature", invalid_json_b64);
+        let invalid_token = format!("{invalid_json_b64}.payload.signature");
         let result = parser::JwtParser::decode_header(&invalid_token);
         assert!(result.is_err());
     }
@@ -337,7 +336,7 @@ mod tests {
         });
         let header_b64 =
             base64::engine::general_purpose::URL_SAFE_NO_PAD.encode(header.to_string().as_bytes());
-        let token = format!("{}.payload.signature", header_b64);
+        let token = format!("{header_b64}.payload.signature");
 
         let result = parser::JwtParser::decode_header(&token);
         assert!(result.is_err());
@@ -383,7 +382,7 @@ mod tests {
         );
 
         // 测试过长的坐标
-        jwk.x = Some(base64::engine::general_purpose::URL_SAFE_NO_PAD.encode(&vec![0u8; 64])); // 64 字节，超过 P-256 的 32 字节
+        jwk.x = Some(base64::engine::general_purpose::URL_SAFE_NO_PAD.encode(vec![0u8; 64])); // 64 字节，超过 P-256 的 32 字节
         let result2 = parser::JwtParser::create_decoding_key(&jwk);
         assert!(
             matches!(result2, Err(AuthError::InvalidKeyComponent(_))),
@@ -430,7 +429,7 @@ mod tests {
     fn test_decode_header_maximum_length() {
         // 测试接近最大长度限制的 token
         let long_part = "a".repeat(2700); // 接近 8KB / 3
-        let long_token = format!("{}.{}.{}", long_part, long_part, long_part);
+        let long_token = format!("{long_part}.{long_part}.{long_part}");
 
         let result = parser::JwtParser::decode_header(&long_token);
         assert!(
@@ -544,7 +543,7 @@ mod tests {
         ];
 
         for header in malicious_headers {
-            let token = format!("{}.payload.signature", header);
+            let token = format!("{header}.payload.signature");
             let result = parser::JwtParser::decode_header(&token);
 
             // 应该能解析 header，但算法验证会在后续步骤失败
@@ -615,15 +614,13 @@ mod tests {
             let result = parser::JwtParser::decode_header(token);
             assert!(
                 result.is_err(),
-                "Token '{}' ({}) should be invalid",
-                token,
-                description
+                "Token '{token}' ({description}) should be invalid"
             );
 
             // 验证错误类型
             match result {
                 Err(_) => {} // 接受任何错误类型，因为不同格式错误可能返回不同错误
-                _ => panic!("Expected error for token: {}", token),
+                _ => panic!("Expected error for token: {token}"),
             }
         }
     }
@@ -644,7 +641,7 @@ mod tests {
         }
 
         let duration = start.elapsed();
-        assert!(duration.as_millis() < 100, "1000 Supabase Auth JWT header parsing operations should complete within 100ms, took: {:?}", duration);
+        assert!(duration.as_millis() < 100, "1000 Supabase Auth JWT header parsing operations should complete within 100ms, took: {duration:?}");
 
         // 测试恶意构造的 token 不会导致 Supabase Auth 解析器性能问题
         // 确保 DoS 攻击防护有效
@@ -661,7 +658,7 @@ mod tests {
 
         for malicious_token in &malicious_tokens {
             let start = std::time::Instant::now();
-            let result = parser::JwtParser::decode_header(&malicious_token);
+            let result = parser::JwtParser::decode_header(malicious_token);
             let duration = start.elapsed();
 
             assert!(
@@ -670,8 +667,7 @@ mod tests {
             );
             assert!(
                 duration.as_millis() < 10,
-                "Supabase Auth parser should quickly reject malicious tokens, took: {:?}",
-                duration
+                "Supabase Auth parser should quickly reject malicious tokens, took: {duration:?}"
             );
         }
     }
@@ -692,8 +688,7 @@ mod tests {
             let result = parser::JwtParser::decode_header(token);
             assert!(
                 result.is_err(),
-                "Supabase Auth parser should reject token with Unicode characters: {}",
-                token
+                "Supabase Auth parser should reject token with Unicode characters: {token}"
             );
         }
 
@@ -739,8 +734,7 @@ mod tests {
             // 严格的实现应该拒绝包含填充字符的 token
             assert!(
                 result.is_err(),
-                "Supabase Auth JWT parser should reject token with padding characters: {}",
-                description
+                "Supabase Auth JWT parser should reject token with padding characters: {description}"
             );
 
             // 确保错误类型是 Unauthorized（而不是其他类型的错误）
@@ -748,9 +742,7 @@ mod tests {
                 // 接受 DecodeHeader 或其他相关错误类型
                 assert!(
                     matches!(error, AuthError::DecodeHeader | AuthError::InvalidToken),
-                    "Expected DecodeHeader or InvalidToken error for {}, got: {:?}",
-                    description,
-                    error
+                    "Expected DecodeHeader or InvalidToken error for {description}, got: {error:?}"
                 );
             }
         }

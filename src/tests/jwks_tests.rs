@@ -445,8 +445,7 @@ mod tests {
             let result = cache.get_jwks().await;
             assert!(
                 result.is_ok(),
-                "Cache access should be stable on iteration {}",
-                i
+                "Cache access should be stable on iteration {i}"
             );
             let jwks = result.unwrap();
             assert_eq!(jwks.keys.len(), 1, "Key count should remain consistent");
@@ -555,9 +554,7 @@ mod tests {
             // 验证成功率
             assert!(
                 success_count >= 18,
-                "Round {}: Success rate too low: {}/20",
-                round,
-                success_count
+                "Round {round}: Success rate too low: {success_count}/20"
             );
 
             // 短暂休息，模拟实际运行间隔
@@ -635,19 +632,16 @@ mod tests {
 
         assert!(
             success_rate >= 95.0,
-            "Success rate too low: {:.2}%",
-            success_rate
+            "Success rate too low: {success_rate:.2}%"
         );
         assert!(
             max_duration.as_millis() < 1000,
-            "Max duration too high: {:?}",
-            max_duration
+            "Max duration too high: {max_duration:?}"
         );
 
         println!(
-            "Pressure test completed: {}/{} tasks succeeded ({:.2}%)",
-            total_success, total_tasks, success_rate
+            "Pressure test completed: {total_success}/{total_tasks} tasks succeeded ({success_rate:.2}%)"
         );
-        println!("Duration range: {:?} - {:?}", min_duration, max_duration);
+        println!("Duration range: {min_duration:?} - {max_duration:?}");
     }
 }

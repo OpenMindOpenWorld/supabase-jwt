@@ -435,7 +435,7 @@ mod tests {
         let base_claims = create_test_claims();
 
         // 测试多个不同的subject值
-        let test_subjects = (0..100).map(|i| format!("user_{}", i)).collect::<Vec<_>>();
+        let test_subjects = (0..100).map(|i| format!("user_{i}")).collect::<Vec<_>>();
 
         let start = std::time::Instant::now();
         let mut validation_results = Vec::new();

@@ -238,8 +238,7 @@ mod tests {
             }
             Err(e) => {
                 panic!(
-                    "Expected a verification error due to invalid signature, but got: {:?}",
-                    e
+                    "Expected a verification error due to invalid signature, but got: {e:?}"
                 );
             }
             Ok(_) => {
@@ -419,8 +418,7 @@ mod tests {
         let avg_serialization_time = serialization_duration / iterations;
         assert!(
             avg_serialization_time < Duration::from_millis(1),
-            "Serialization too slow: {:?} per operation",
-            avg_serialization_time
+            "Serialization too slow: {avg_serialization_time:?} per operation"
         );
 
         // 测试反序列化性能
@@ -436,13 +434,11 @@ mod tests {
         let avg_deserialization_time = deserialization_duration / iterations;
         assert!(
             avg_deserialization_time < Duration::from_millis(2),
-            "Deserialization too slow: {:?} per operation",
-            avg_deserialization_time
+            "Deserialization too slow: {avg_deserialization_time:?} per operation"
         );
 
         println!(
-            "Performance metrics - Serialization: {:?}/op, Deserialization: {:?}/op",
-            avg_serialization_time, avg_deserialization_time
+            "Performance metrics - Serialization: {avg_serialization_time:?}/op, Deserialization: {avg_deserialization_time:?}/op"
         );
     }
 
@@ -479,13 +475,11 @@ mod tests {
         let avg_operation_time = total_duration / iterations;
         assert!(
             avg_operation_time < Duration::from_millis(10),
-            "End-to-end operation too slow: {:?} per operation",
-            avg_operation_time
+            "End-to-end operation too slow: {avg_operation_time:?} per operation"
         );
 
         println!(
-            "End-to-end performance: {:?}/op for {} iterations",
-            avg_operation_time, iterations
+            "End-to-end performance: {avg_operation_time:?}/op for {iterations} iterations"
         );
     }
 

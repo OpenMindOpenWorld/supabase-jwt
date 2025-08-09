@@ -124,7 +124,7 @@ mod tests {
         let mut metadata = serde_json::Map::new();
         for i in 0..100 {
             metadata.insert(
-                format!("key_{}", i),
+                format!("key_{i}"),
                 json!({
                     "id": i,
                     "name": format!("item_{}", i),
@@ -270,8 +270,7 @@ mod tests {
         // 验证测试运行了足够的迭代
         assert!(
             iteration_count > 10,
-            "Should have completed multiple iterations: {}",
-            iteration_count
+            "Should have completed multiple iterations: {iteration_count}"
         );
     }
 
@@ -374,7 +373,7 @@ mod tests {
         let mut metadata = serde_json::Map::new();
         for i in 0..1000 {
             metadata.insert(
-                format!("large_key_{}", i),
+                format!("large_key_{i}"),
                 json!({
                     "id": i,
                     "data": vec![i; 100], // 较大的数据块
