@@ -23,7 +23,7 @@ jobs:
     permissions:
       contents: write
     outputs:
-      upload_url: ${{ steps.create_release.outputs.upload_url }}
+      release_url: ${{ steps.create_release.outputs.url }}
       version: ${{ steps.get_version.outputs.version }}
     steps:
       - name: Checkout code
@@ -60,21 +60,22 @@ jobs:
             CHANGELOG_CONTENT="Release ${VERSION}"
           fi
           
-          # 保存到文件，避免特殊字符问题
-          echo "$CHANGELOG_CONTENT" > /tmp/changelog.txt
-          echo "changelog_file=/tmp/changelog.txt" >> $GITHUB_OUTPUT
+          # 设置输出变量
+          echo "content<<EOF" >> $GITHUB_OUTPUT
+          echo "$CHANGELOG_CONTENT" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
       
       - name: Create Release
         id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ steps.get_version.outputs.version }}
-          release_name: Release ${{ steps.get_version.outputs.version }}
-          body_path: ${{ steps.changelog.outputs.changelog_file }}
+          name: Release ${{ steps.get_version.outputs.version }}
+          body: ${{ steps.changelog.outputs.content }}
           draft: false
           prerelease: ${{ contains(steps.get_version.outputs.version, '-') }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   # 发布到crates.io
   publish-crates:
