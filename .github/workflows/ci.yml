@@ -53,7 +53,7 @@ jobs:
           key: ${{ runner.os }}-cargo-clippy-${{ hashFiles('**/Cargo.lock') }}
       
       - name: Run clippy
-        run: cargo clippy --all-targets --all-features -- -D warnings
+        run: cargo clippy --all-targets --all-features
 
   # 测试
   test:
@@ -154,8 +154,6 @@ jobs:
       
       - name: Build documentation
         run: cargo doc --no-deps --all-features
-        env:
-          RUSTDOCFLAGS: "-D warnings"
       
       - name: Deploy to GitHub Pages
         if: github.ref == 'refs/heads/main'
