@@ -9,17 +9,7 @@ repository = "https://github.com/OpenMindOpenWorld/supabase-jwt"
 homepage = "https://github.com/OpenMindOpenWorld/supabase-jwt"
 documentation = "https://docs.rs/supabase-jwt"
 readme = "README.md"
-keywords = [
-    "supabase",
-    "jwt",
-    "auth",
-    "authentication",
-    "jwks",
-    "tokio",
-    "axum",
-    "actix",
-    "rocket",
-]
+keywords = ["supabase", "jwt", "authentication", "jwks", "validation"]
 categories = ["authentication", "web-programming"]
 
 [dependencies]
