@@ -21,6 +21,17 @@ jobs:
       - name: Setup Rust
         uses: dtolnay/rust-toolchain@stable
       
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
+          key: ${{ runner.os }}-cargo-outdated-${{ hashFiles('**/Cargo.lock') }}
+      
       - name: Install cargo-outdated
         uses: taiki-e/install-action@cargo-outdated
       
@@ -61,6 +72,17 @@ jobs:
       - name: Setup Rust
         uses: dtolnay/rust-toolchain@stable
       
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
+          key: ${{ runner.os }}-cargo-update-${{ hashFiles('**/Cargo.lock') }}
+      
       - name: Install cargo-edit
         uses: taiki-e/install-action@cargo-edit
       
@@ -82,6 +104,7 @@ jobs:
         if: env.has_updates == 'true'
         run: |
           cargo test --all-features
+          cargo test --doc
           cargo clippy --all-targets --all-features -- -D warnings
       
       - name: Create Pull Request
@@ -122,6 +145,17 @@ jobs:
       
       - name: Setup Rust
         uses: dtolnay/rust-toolchain@stable
+      
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
+          key: ${{ runner.os }}-cargo-audit-${{ hashFiles('**/Cargo.lock') }}
       
       - name: Install cargo-audit
         uses: taiki-e/install-action@cargo-audit
@@ -178,6 +212,17 @@ jobs:
       
       - name: Setup Rust
         uses: dtolnay/rust-toolchain@stable
+      
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
+          key: ${{ runner.os }}-cargo-license-${{ hashFiles('**/Cargo.lock') }}
       
       - name: Install cargo-license
         run: cargo install cargo-license
