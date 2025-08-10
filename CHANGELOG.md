@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.1] - 2025-08-10
+
+### Changed
+- **Optimized Dependencies**: Trimmed `reqwest` and `tokio` features to significantly reduce the library's impact on the final binary size of consumer projects. This improves performance and compile times without any breaking changes.
+
 ## [0.1.0] - YYYY-MM-DD
 
 ### Added

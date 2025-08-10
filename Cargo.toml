@@ -1,6 +1,6 @@
 [package]
 name = "supabase-jwt"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["kanata996 <kkanata996@gmail.com>"]
 edition = "2021"
 description = "A lightweight, framework-agnostic library for validating Supabase Auth JWTs using a cached JWKS."
@@ -14,12 +14,12 @@ categories = ["authentication", "web-programming"]
 
 [dependencies]
 base64 = "0.22.1"
-reqwest = { version = "0.12.9", features = ["json"] }
+reqwest = { version = "0.12.9", default-features = false, features = ["json", "rustls-tls"] }
 jsonwebtoken = "9.3.1"
 serde = { version = "1.0.219", features = ["derive"] }
 serde_json = "1.0.141"
 thiserror = "2.0.12"
-tokio = { version = "1.47.0", features = ["time"] }
+tokio = { version = "1.47.0", default-features = false, features = ["time"] }
 tracing = "0.1.41"
 
 [dev-dependencies]
