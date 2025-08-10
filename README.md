@@ -72,7 +72,7 @@ Add the following to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-supabase-jwt = "0.1.0" # Please check for the latest version on crates.io
+supabase-jwt = "0.1.1" # Please check for the latest version on crates.io
 tokio = { version = "1.47.0", features = ["full"] }
 ```
 
