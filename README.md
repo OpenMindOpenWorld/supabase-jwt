@@ -1,9 +1,10 @@
 # supabase-jwt
 
 [![Crates.io](https://img.shields.io/crates/v/supabase-jwt.svg)](https://crates.io/crates/supabase-jwt)
+[![Downloads](https://img.shields.io/crates/d/supabase-jwt.svg)](https://crates.io/crates/supabase-jwt)
 [![Docs.rs](https://docs.rs/supabase-jwt/badge.svg)](https://docs.rs/supabase-jwt)
-[![Build Status](https://img.shields.io/github/actions/workflow/status/supabase-community/supabase-jwt-rs/ci.yml?branch=main)](https://github.com/supabase-community/supabase-jwt-rs/actions/workflows/ci.yml)
-[![License](https://img.shields.io/crates/l/supabase-jwt.svg)](https://github.com/supabase-community/supabase-jwt-rs/blob/main/LICENSE-MIT)
+[![License](https://img.shields.io/crates/l/supabase-jwt.svg)](https://github.com/OpenMindOpenWorld/supabase-jwt/blob/main/LICENSE)
+[![CI](https://github.com/OpenMindOpenWorld/supabase-jwt/workflows/CI/badge.svg)](https://github.com/OpenMindOpenWorld/supabase-jwt/actions)
 
 English | [简体中文](README-zh_CN.md)
 
@@ -18,6 +19,7 @@ A lightweight, framework-agnostic Rust library for validating Supabase Auth JWTs
   - [Axum](#axum)
   - [Actix Web](#actix-web)
 - [📖 API Overview](#-api-overview)
+- [🚀 Advanced Usage](#-advanced-usage)
 - [🏛️ Design Philosophy](#️-design-philosophy)
 - [✅ Testing and Quality](#-testing-and-quality)
 - [🤝 Contributing](#-contributing)
@@ -273,4 +275,4 @@ Issues and Pull Requests are welcome! Before contributing, please ensure:
 
 ## 📜 License
 
-This project is dual-licensed under MIT or Apache-2.0. See [LICENSE-MIT](LICENSE-MIT) and [LICENSE-APACHE](LICENSE-APACHE) for details.
+This project is dual-licensed under MIT or Apache-2.0. See [LICENSE](LICENSE) and [LICENSE-APACHE](LICENSE-APACHE) for details.
